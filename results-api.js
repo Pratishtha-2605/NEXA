@@ -100,7 +100,10 @@ async function loadApiResults(id) {
   const people = Object.entries(byPerson)
     .map(([pid, list]) => ({
       pid,
-      avgRT: Math.round(list.reduce((s, r) => s + r.reactionTime, 0) / list.length),
+      avgRT: (() => {
+        const timed = list.filter((r) => typeof r.reactionTime === "number");
+        return timed.length ? Math.round(timed.reduce((s, r) => s + r.reactionTime, 0) / timed.length) : 0;
+      })(),
       accuracy: Math.round((list.filter((r) => r.isCorrect).length / list.length) * 100),
       date: list[list.length - 1].submittedAt,
     }))

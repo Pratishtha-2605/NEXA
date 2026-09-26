@@ -273,27 +273,39 @@ async function submitResponse(data) {
   const r = await callApi("POST", "/responses", data);
   if (!r.offline) return r.data;
 
+  // Offline: score it like the server would, using the locally stored answers
+  const exp = localStore().find((e) => e._id === data.experimentId);
+  const trial = exp && exp.trials.find((t) => t.order === data.trialIndex);
+
   const all = JSON.parse(localStorage.getItem("nexa_responses")) || [];
-  all.push({ ...data, reactionTime: data.responseTimestamp - data.stimulusOnsetTimestamp, submittedAt: new Date().toISOString() });
+  all.push({
+    ...data,
+    reactionTime: data.timedOut ? null : Math.round(data.responseTimestamp - data.stimulusOnsetTimestamp),
+    isCorrect: trial ? data.response === trial.correctResponse : undefined,
+    submittedAt: new Date().toISOString(),
+  });
   localStorage.setItem("nexa_responses", JSON.stringify(all));
   return data;
 }
 
-// Send every trial of one participant
+// Send every trial of one participant in ONE request
+// (POST /api/responses accepts an array; the server works out isCorrect)
 async function submitAllResponses(experimentId, participantId, trialResults) {
-  return Promise.all(
-    trialResults.map((t) =>
-      submitResponse({
-        experimentId,
-        participantId,
-        trialIndex: t.trialIndex,
-        stimulusOnsetTimestamp: t.stimulusOnsetTimestamp,
-        responseTimestamp: t.responseTimestamp,
-        response: t.response, // needs a "response" field in the Response model to be stored
-        ...(typeof t.isCorrect === "boolean" ? { isCorrect: t.isCorrect } : {}),
-      })
-    )
-  );
+  const items = trialResults.map((t) => ({
+    experimentId,
+    participantId,
+    trialId: t.trialId || undefined,
+    trialIndex: t.trialIndex,
+    stimulus: t.stimulus,
+    response: t.response,
+    timedOut: !!t.timedOut,
+    stimulusOnsetTimestamp: t.stimulusOnsetTimestamp,
+    responseTimestamp: t.responseTimestamp,
+  }));
+
+  const r = await callApi("POST", "/responses", items);
+  if (!r.offline) return r.data;
+  return Promise.all(items.map(submitResponse)); // offline: save each one locally
 }
 
 // GET /api/responses/:experimentId
@@ -312,7 +324,10 @@ async function getExperimentStats(experimentId) {
   // Same calculation as the backend, done on local data
   const list = await getResponsesByExperiment(experimentId);
   if (list.length === 0) return { participants: 0, trials: 0, averageReactionTime: 0, accuracy: 0, perTrial: [] };
-  const avg = (arr) => arr.reduce((s, x) => s + x.reactionTime, 0) / arr.length;
+  const avg = (arr) => {
+    const timed = arr.filter((x) => typeof x.reactionTime === "number");
+    return timed.length ? timed.reduce((s, x) => s + x.reactionTime, 0) / timed.length : 0;
+  };
   const acc = (arr) => (arr.filter((x) => x.isCorrect).length / arr.length) * 100;
   const groups = {};
   list.forEach((x) => (groups[x.trialIndex] = groups[x.trialIndex] || []).push(x));
