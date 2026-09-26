@@ -1,4 +1,6 @@
-// ===== Results page =====
+// ===== Results page: quick Stroop tests (browser data) =====
+// (builder experiments opened with ?exp=<id> are handled by results-api.js)
+if (!new URLSearchParams(window.location.search).get("exp")) {
 
 const experiment = getExperiment(getIdFromUrl()) || getExperiment("stroop");
 const responses = getResponses(experiment.id);
@@ -143,3 +145,4 @@ document.getElementById("csvBtn").addEventListener("click", () => {
   link.click();
   showToast("CSV downloaded");
 });
+}

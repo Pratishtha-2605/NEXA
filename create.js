@@ -273,7 +273,7 @@ function validate() {
     return fail("Please choose an experiment type.", document.getElementById("paradigmGrid"));
   }
 
-  const minOptions = state.paradigm === "simple-rt" ? 1 : 2;
+  const minOptions = state.paradigm === "simple-reaction-time" ? 1 : 2;
   for (let i = 0; i < state.trials.length; i++) {
     const t = state.trials[i];
     const card = trialList.children[i];

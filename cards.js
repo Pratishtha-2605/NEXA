@@ -13,10 +13,11 @@ function experimentCard(exp) {
     ? '<span class="badge badge-live">Published</span>'
     : '<span class="badge badge-draft">Draft</span>';
 
-  // Drafts: Edit / Preview / Publish     Published: View / Share
+  // Drafts: Edit / Preview / Publish     Published: View / Results / Share
   const actions = published
     ? `
       <a class="btn-secondary btn-link btn-small" href="run.html?preview=${id}">View</a>
+      <a class="btn-secondary btn-link btn-small" href="results.html?exp=${id}">📊 Results</a>
       <button class="btn-secondary btn-small-btn" onclick="copyShareLink('${exp.shareSlug}')">🔗 Share</button>`
     : `
       <a class="btn-secondary btn-link btn-small" href="create.html?id=${id}">Edit</a>
@@ -35,7 +36,7 @@ function experimentCard(exp) {
       </div>
       <div class="type-pill">${p.icon} ${p.label}</div>
       <p class="card-desc">${escapeHtml(exp.description || "No description")}</p>
-      <div class="card-meta">${(exp.trials || []).length} Trials</div>
+      <div class="card-meta">${trialCountOf(exp)} Trials</div>
       ${link}
       <div class="card-actions">${actions}</div>
     </article>`;
@@ -62,7 +63,7 @@ async function renderExperimentCards() {
   }
 
   const published = experiments.filter(isPublished).length;
-  const trials = experiments.reduce((sum, e) => sum + (e.trials || []).length, 0);
+  const trials = experiments.reduce((sum, e) => sum + trialCountOf(e), 0);
   setText("statExperiments", experiments.length);
   setText("statPublished", published);
   setText("statDrafts", experiments.length - published);

@@ -50,8 +50,12 @@ async function load() {
   document.title = "CognitiveLab — " + experiment.title;
 
   // Trial order: randomized or by "order"
-  trials = (experiment.trials || []).slice().sort((a, b) => a.order - b.order);
-  if (experiment.settings?.randomizeTrialOrder) shuffle(trials);
+  // (the backend's participant endpoint already sorts or shuffles them)
+  trials = (experiment.trials || []).slice();
+  if (!experiment.alreadyOrdered) {
+    trials.sort((a, b) => a.order - b.order);
+    if (experiment.settings?.randomizeTrialOrder) shuffle(trials);
+  }
 
   const typeText = paradigm.icon + " " + paradigm.label;
   $("consentType").textContent = typeText;
@@ -76,7 +80,7 @@ function shuffle(list) {
 
 function keyHelpText() {
   switch (experiment.paradigm) {
-    case "simple-rt":
+    case "simple-reaction-time":
     case "go-no-go":
       return "Keyboard: SPACE to respond. You can also tap the button.";
     case "flanker":
@@ -184,7 +188,8 @@ function record(response, timedOut) {
   clearTimeout(timeoutTimer);
 
   // Measured in the browser, so network speed never affects it
-  const reactionTimeMs = timedOut ? null : Math.round(performance.now() - startTime);
+  const now = performance.now();
+  const reactionTimeMs = timedOut ? null : Math.round(now - startTime);
   const trial = trials[current];
 
   // No press on a Go/No-Go trial = "withhold"
@@ -192,11 +197,16 @@ function record(response, timedOut) {
 
   results.push({
     trialId: trial._id || null,
-    order: trial.order,
+    trialIndex: trial.order ?? current + 1,
     stimulus: trial.stimulus?.content,
     response,
     reactionTimeMs,
     timedOut,
+    // High-resolution clock turned into real timestamps (ms since 1970, with decimals)
+    stimulusOnsetTimestamp: performance.timeOrigin + startTime,
+    responseTimestamp: performance.timeOrigin + now,
+    // Only known in preview (participants never receive the answers)
+    isCorrect: trial.correctResponse !== undefined ? response === trial.correctResponse : undefined,
   });
 
   current++;
@@ -231,14 +241,8 @@ async function send() {
   $("retryBtn").classList.add("hidden");
   $("doneText").textContent = "Saving your responses…";
   try {
-    await submitResponses({
-      experimentId: expId(experiment),
-      shareSlug: slug,
-      participantId,
-      startedAt,
-      completedAt: new Date().toISOString(),
-      responses: results,
-    });
+    // One POST /api/responses per trial
+    await submitAllResponses(expId(experiment), participantId, results);
     $("doneText").textContent = "Your responses have been recorded. You can close this tab now.";
   } catch (err) {
     $("doneText").textContent = "We couldn't save your responses: " + err.message;
