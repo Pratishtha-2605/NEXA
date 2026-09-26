@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CognitiveLab — Experiment</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="brand">
+        <span class="logo">CL</span>
+        <span class="brand-name">CognitiveLab</span>
+      </div>
+      <span class="participant-tag" id="participantTag"></span>
+    </header>
+
+    <main class="experiment-main">
+      <!-- Screen 1: Consent -->
+      <section id="consentScreen" class="exp-screen form-card">
+        <h1 id="expTitle">Loading…</h1>
+        <p id="expDesc"></p>
+
+        <div class="instructions">
+          <strong>How it works</strong>
+          <p>
+            A word will appear in a colored ink. Respond to the <b>ink color</b>, not the word.
+            Press the first letter of the color on your keyboard, or tap the color button.
+          </p>
+          <div class="key-row">
+            <span class="key key-red">R</span>
+            <span class="key key-blue">B</span>
+            <span class="key key-green">G</span>
+            <span class="key key-yellow">Y</span>
+          </div>
+        </div>
+
+        <p class="consent-text">
+          By continuing, you agree to take part in this short experiment. You get an anonymous
+          ID and no personal information is collected.
+        </p>
+        <label class="checkbox">
+          <input type="checkbox" id="consentCheck" /> I have read the above and agree to take part
+        </label>
+        <button id="consentBtn" disabled>I Agree — Start</button>
+      </section>
+
+      <!-- Screen 2: Trials -->
+      <section id="trialScreen" class="exp-screen hidden">
+        <div class="trial-counter" id="trialCounter">Trial 1 of 20</div>
+        <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+        <div class="stimulus" id="stimulusWord">+</div>
+        <div class="response-buttons" id="responseButtons"></div>
+      </section>
+
+      <!-- Screen 3: Done -->
+      <section id="doneScreen" class="exp-screen form-card hidden">
+        <h1>Thank you! 🎉</h1>
+        <p>Your responses have been recorded.</p>
+        <div class="stats stats-small">
+          <div class="stat">
+            <span class="stat-label">Your avg reaction time</span>
+            <span class="stat-value" id="doneRT">0 ms</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Your accuracy</span>
+            <span class="stat-value" id="doneAcc">0%</span>
+          </div>
+        </div>
+        <div class="done-actions">
+          <a href="index.html#progress" class="btn-link btn-big">📈 See my progress</a>
+          <button class="btn-secondary btn-big" onclick="location.reload()">↻ Try again</button>
+        </div>
+      </section>
+    </main>
+
+    <script src="data.js"></script>
+    <script src="experiment.js"></script>
+  </body>
+</html>

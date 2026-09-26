@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CognitiveLab — Browser-based cognitive experiments</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- ===== Top menu (dashboard) — each link jumps to a section below ===== -->
+    <header class="home-nav">
+      <a href="#home" class="brand">
+        <span class="logo">CL</span>
+        <span class="brand-name">CognitiveLab</span>
+      </a>
+      <nav class="nav-links" id="navLinks">
+        <a href="#home">Home</a>
+        <a href="#create">Create</a>
+        <a href="#experiments">Experiments</a>
+        <a href="#progress">My Progress</a>
+        <a href="#history">History</a>
+        <a href="#contact">Contact</a>
+        <a href="#feedback" class="btn-link nav-cta">Feedback</a>
+      </nav>
+      <button class="menu-btn" id="menuBtn">☰</button>
+    </header>
+
+    <!-- ===== 1. Website name + what it does ===== -->
+    <section class="hero hero-full" id="home">
+      <div class="hero-text">
+        <span class="eyebrow">For psychology & neuroscience researchers</span>
+        <h1 class="hero-title">
+          CognitiveLab <span class="gradient-text">runs cognitive experiments in any browser.</span>
+        </h1>
+        <p class="hero-sub">
+          Create a reaction-time experiment like the Stroop test, share it with one link, and
+          collect millisecond-accurate results from anyone. No lab, no installs, no code.
+        </p>
+        <div class="hero-actions">
+          <a href="#create" class="btn-link btn-big">Create an Experiment ↓</a>
+          <a href="experiment.html?id=stroop-quick" class="btn-link btn-secondary btn-big">
+            Try the Stroop test
+          </a>
+        </div>
+      </div>
+
+      <!-- Animated Stroop preview -->
+      <div class="hero-demo">
+        <div class="demo-top">
+          <span class="demo-dot"></span><span class="demo-dot"></span><span class="demo-dot"></span>
+          <span class="demo-label">Stroop trial · live preview</span>
+        </div>
+        <div class="demo-word" id="demoWord">RED</div>
+        <div class="demo-hint">Respond to the <b>ink color</b>, not the word</div>
+        <div class="demo-rt">Reaction time: <span id="demoRT">—</span></div>
+      </div>
+
+      <a href="#create" class="scroll-hint">Scroll ↓</a>
+    </section>
+
+    <!-- ===== 2. Create Experiment ===== -->
+    <section class="home-section" id="create">
+      <span class="eyebrow">Step 1</span>
+      <h2 class="section-title">Create an Experiment</h2>
+
+      <p class="section-sub">Pick one of the 5 supported experiment types. You design every trial yourself.</p>
+
+      <!-- Filled in by home.js from PARADIGMS in api.js -->
+      <div class="paradigm-grid paradigm-grid-home" id="homeParadigms"></div>
+
+      <div class="flow-line">
+        <span>Create</span>→<span>Configure trials</span>→<span>Save Draft</span>→<span>Preview</span>→<span>Publish</span>→<span>Share link</span>
+      </div>
+
+      <!-- Quick Stroop (auto-generated trials), the original quick form -->
+      <div class="split split-top section-gap">
+        <div class="form-card">
+          <h2>⚡ Quick Stroop test</h2>
+          <p class="hint">No time? Make a ready-to-use Stroop test with random trials in one click.</p>
+          <label for="quickTitle">Experiment Title</label>
+          <input type="text" id="quickTitle" placeholder="e.g. My Stroop Test" />
+
+          <label for="quickDesc">Description</label>
+          <textarea id="quickDesc" placeholder="What should the participant do?"></textarea>
+
+          <label for="quickTrials">Number of trials</label>
+          <select id="quickTrials">
+            <option value="8">8 trials (quick)</option>
+            <option value="10" selected>10 trials</option>
+            <option value="20">20 trials</option>
+            <option value="30">30 trials</option>
+          </select>
+
+          <div class="form-actions">
+            <button id="quickCreateBtn">Create Quick Test</button>
+          </div>
+        </div>
+
+        <div class="steps steps-2">
+          <div class="step">
+            <span class="step-num">1</span>
+            <h3>Create</h3>
+            <p>Pick a type and design each trial, or use Quick Stroop.</p>
+          </div>
+          <div class="step">
+            <span class="step-num">2</span>
+            <h3>Share</h3>
+            <p>Publish and copy one link to send to participants.</p>
+          </div>
+          <div class="step">
+            <span class="step-num">3</span>
+            <h3>Participate</h3>
+            <p>Consent, anonymous ID, respond from any device.</p>
+          </div>
+          <div class="step">
+            <span class="step-num">4</span>
+            <h3>Analyze</h3>
+            <p>Reaction time, accuracy, charts and CSV export.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 3 + 4. Totals + all experiments ===== -->
+    <section class="home-section" id="experiments">
+      <span class="eyebrow">Step 2</span>
+      <div class="section-head">
+        <h2 class="section-title">My Experiments</h2>
+        <a href="dashboard.html" class="table-link">Open full dashboard →</a>
+      </div>
+
+      <div class="stats stats-4">
+        <div class="stat">
+          <span class="stat-label">Experiments</span>
+          <span class="stat-value" id="statExperiments">0</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Published</span>
+          <span class="stat-value" id="statPublished">0</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Drafts</span>
+          <span class="stat-value" id="statDrafts">0</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Total Trials</span>
+          <span class="stat-value" id="statTrials">0</span>
+        </div>
+      </div>
+
+      <div class="card-grid" id="experimentList"></div>
+
+      <!-- Quick Stroop tests, with participants, results and CSV -->
+      <div class="section-head section-gap">
+        <h2>Stroop Tests with Results</h2>
+        <span class="hint"><span id="statParticipants">0</span> participants so far</span>
+      </div>
+      <div class="card-grid" id="demoList"></div>
+    </section>
+
+    <!-- ===== 5. My Progress ===== -->
+    <section class="home-section" id="progress">
+      <span class="eyebrow">Step 3</span>
+      <h2 class="section-title">My Progress</h2>
+      <p class="section-sub">
+        Your anonymous ID on this device is <span class="you-tag" id="myIdTag"></span>.
+        Take a test a few times to see if you're getting faster.
+      </p>
+
+      <div class="empty hidden" id="progressEmpty">
+        <p>You haven't taken any tests yet.</p>
+        <a href="experiment.html?id=stroop-quick" class="btn-link btn-big">Take the Stroop Quick Demo</a>
+      </div>
+
+      <div id="progressContent">
+        <div class="stats stats-4">
+          <div class="stat">
+            <span class="stat-label">Attempts</span>
+            <span class="stat-value" id="statAttempts">0</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Latest Avg RT</span>
+            <span class="stat-value" id="statLatest">—</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Personal Best</span>
+            <span class="stat-value" id="statBest">—</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Improvement</span>
+            <span class="stat-value" id="statImprove">—</span>
+            <span class="stat-note" id="statImproveNote"></span>
+          </div>
+        </div>
+
+        <div class="results-grid">
+          <div class="form-card">
+            <div class="section-head">
+              <h2>Reaction Time Over Attempts</h2>
+              <span class="hint">Lower is faster</span>
+            </div>
+            <div class="chart-box"><canvas id="progressChart"></canvas></div>
+          </div>
+          <div class="form-card">
+            <h2>Insights</h2>
+            <ul class="insights" id="insights"></ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 6. History ===== -->
+    <section class="home-section" id="history">
+      <span class="eyebrow">Step 4</span>
+      <h2 class="section-title">History</h2>
+
+      <div class="form-card">
+        <div class="section-head">
+          <h2>All Submissions</h2>
+          <span class="hint">Newest first · click a row for full results</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Participant</th><th>Experiment</th><th>Avg RT</th>
+                <th>Accuracy</th><th>vs their previous</th><th>Submitted</th>
+              </tr>
+            </thead>
+            <tbody id="historyTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 7. Contact Us ===== -->
+    <section class="home-section" id="contact">
+      <span class="eyebrow">Get in touch</span>
+      <h2 class="section-title">Contact Us</h2>
+
+      <div class="split split-top">
+        <div class="contact-list">
+          <div class="feature">
+            <div class="feature-icon">✉️</div>
+            <h3>Email</h3>
+            <p>team.cognitivelab@gmail.com</p>
+          </div>
+          <div class="feature">
+            <div class="feature-icon">📍</div>
+            <h3>Location</h3>
+            <p>IIIT Sri City, Andhra Pradesh</p>
+          </div>
+          <div class="feature">
+            <div class="feature-icon">🕒</div>
+            <h3>Response time</h3>
+            <p>Usually within 24 hours</p>
+          </div>
+        </div>
+
+        <form class="form-card" id="contactForm">
+          <label for="contactName">Your Name</label>
+          <input type="text" id="contactName" placeholder="Jane Doe" required />
+
+          <label for="contactEmail">Your Email</label>
+          <input type="email" id="contactEmail" placeholder="you@example.com" required />
+
+          <label for="contactMsg">Message</label>
+          <textarea id="contactMsg" placeholder="How can we help?" required></textarea>
+
+          <div class="form-actions">
+            <button type="submit">Send Message</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ===== 8. Feedback ===== -->
+    <section class="home-section" id="feedback">
+      <span class="eyebrow">Help us improve</span>
+      <h2 class="section-title">Leave Feedback</h2>
+
+      <div class="split split-top">
+        <form class="form-card" id="feedbackForm">
+          <label>How would you rate CognitiveLab?</label>
+          <div class="stars" id="stars">
+            <button type="button" data-star="1">★</button>
+            <button type="button" data-star="2">★</button>
+            <button type="button" data-star="3">★</button>
+            <button type="button" data-star="4">★</button>
+            <button type="button" data-star="5">★</button>
+          </div>
+
+          <label for="feedbackText">Your feedback</label>
+          <textarea id="feedbackText" placeholder="What did you like? What should we add?"></textarea>
+
+          <div class="form-actions">
+            <button type="submit">Submit Feedback</button>
+          </div>
+        </form>
+
+        <div>
+          <h3 class="list-title">Recent feedback</h3>
+          <div id="feedbackList" class="feedback-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      CognitiveLab · Built at Bit N Build Hackathon ·
+      <a href="#home" class="table-link">Back to top ↑</a>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <script src="data.js"></script>
+    <script src="api.js"></script>
+    <script src="cards.js"></script>
+    <script src="home.js"></script>
+  </body>
+</html>

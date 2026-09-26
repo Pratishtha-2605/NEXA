@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CognitiveLab — Create Experiment</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <a href="index.html" class="brand">
+        <span class="logo">CL</span>
+        <span class="brand-name">CognitiveLab</span>
+      </a>
+      <div class="user">
+        <a href="dashboard.html" class="table-link">My Experiments</a>
+        <span class="avatar">R</span>
+      </div>
+    </header>
+
+    <main class="narrow builder">
+      <section class="page-head">
+        <div>
+          <h1 id="pageTitle">Create New Experiment</h1>
+          <p>Create → Configure → Save Draft → Preview → Publish</p>
+        </div>
+        <a href="dashboard.html" class="btn-secondary btn-link">← My Experiments</a>
+      </section>
+
+      <!-- Shown when opening a published experiment -->
+      <div class="locked-note hidden" id="lockedNote">
+        🔒 This experiment is <b>published</b> and can no longer be edited.
+        <a class="table-link" id="lockedShare" href="#">Copy share link</a>
+      </div>
+
+      <!-- Everything inside gets disabled for published experiments -->
+      <fieldset id="builder" class="builder-fieldset">
+        <!-- 1. Details -->
+        <section class="form-card">
+          <h2>1 · Details</h2>
+          <label for="expTitle">Experiment Name</label>
+          <input type="text" id="expTitle" placeholder="e.g. My Color Study" />
+
+          <label for="expDesc">Description</label>
+          <textarea id="expDesc" placeholder="What is this experiment about?"></textarea>
+        </section>
+
+        <!-- 2. Experiment type -->
+        <section class="form-card">
+          <h2>2 · Experiment Type</h2>
+          <div class="paradigm-grid" id="paradigmGrid"></div>
+        </section>
+
+        <!-- 3. Trials (fields depend on the chosen type) -->
+        <section class="form-card" id="trialSection">
+          <div class="section-head">
+            <h2>3 · Trials <span class="count-pill" id="trialCount">0</span></h2>
+            <button type="button" class="btn-secondary" id="addTrialTop">+ Add Trial</button>
+          </div>
+          <p class="hint" id="trialHint">Choose an experiment type above to start adding trials.</p>
+          <div id="trialList"></div>
+          <button type="button" class="add-trial-big hidden" id="addTrialBottom">+ Add Trial</button>
+        </section>
+
+        <!-- 4. Settings -->
+        <section class="form-card">
+          <h2>4 · Settings</h2>
+
+          <label class="switch-row">
+            <span>
+              <b>Randomize Trial Order</b>
+              <span class="hint">Each participant sees the trials in a different order</span>
+            </span>
+            <input type="checkbox" id="setRandomize" class="switch" />
+          </label>
+
+          <label class="switch-row">
+            <span>
+              <b>Show Consent Screen</b>
+              <span class="hint">Participants must agree before starting</span>
+            </span>
+            <input type="checkbox" id="setConsent" class="switch" checked />
+          </label>
+
+          <div id="consentBox">
+            <label for="consentText">Consent Text</label>
+            <textarea id="consentText" rows="4"></textarea>
+          </div>
+        </section>
+      </fieldset>
+    </main>
+
+    <!-- Buttons stuck to the bottom of the screen -->
+    <div class="action-bar" id="actionBar">
+      <span class="hint" id="saveStatus">Not saved yet</span>
+      <div class="action-buttons">
+        <button type="button" class="btn-secondary" id="saveDraftBtn">💾 Save Draft</button>
+        <button type="button" class="btn-secondary" id="previewBtn">👁 Preview</button>
+        <button type="button" id="publishBtn">🚀 Publish Experiment</button>
+      </div>
+    </div>
+
+    <!-- Popup after publishing -->
+    <div class="modal-backdrop hidden" id="publishModal">
+      <div class="modal">
+        <h2>🎉 Experiment published!</h2>
+        <p>Send this link to your participants:</p>
+        <input type="text" id="shareLinkInput" readonly />
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" id="copyLinkBtn">Copy link</button>
+          <a href="dashboard.html" class="btn-link btn-big">Go to My Experiments</a>
+        </div>
+      </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="api.js"></script>
+    <script src="create.js"></script>
+  </body>
+</html>

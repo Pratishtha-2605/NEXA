@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CognitiveLab — Experiment</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="brand">
+        <span class="logo">CL</span>
+        <span class="brand-name">CognitiveLab</span>
+      </div>
+      <span class="participant-tag" id="participantTag"></span>
+    </header>
+
+    <!-- Only shown to the scientist when previewing -->
+    <div class="preview-banner hidden" id="previewBanner">
+      👁 Preview mode: responses are <b>not</b> saved. Correct answers are shown at the end.
+    </div>
+
+    <main class="experiment-main">
+      <!-- Loading / error -->
+      <section id="loadingScreen" class="exp-screen">
+        <p class="hint">Loading experiment…</p>
+      </section>
+
+      <section id="errorScreen" class="exp-screen form-card hidden">
+        <h1>😕 Can't open this experiment</h1>
+        <p id="errorText"></p>
+      </section>
+
+      <!-- 1. Consent -->
+      <section id="consentScreen" class="exp-screen form-card hidden">
+        <span class="type-pill" id="consentType"></span>
+        <h1 id="consentTitle"></h1>
+        <p id="consentDesc"></p>
+        <div class="instructions"><p id="consentText"></p></div>
+        <label class="checkbox">
+          <input type="checkbox" id="consentCheck" /> I have read the above and agree to take part
+        </label>
+        <button id="consentBtn" disabled>I Agree — Continue</button>
+      </section>
+
+      <!-- 2. Instructions -->
+      <section id="introScreen" class="exp-screen form-card hidden">
+        <span class="type-pill" id="introType"></span>
+        <h1 id="introTitle"></h1>
+        <div class="instructions">
+          <strong>How it works</strong>
+          <p id="introText"></p>
+          <p class="hint" id="introKeys"></p>
+        </div>
+        <button id="startBtn" class="btn-big">Start Experiment</button>
+      </section>
+
+      <!-- 3. Trials -->
+      <section id="trialScreen" class="exp-screen hidden">
+        <div class="trial-counter" id="trialCounter"></div>
+        <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+        <div class="stimulus" id="stimulus"></div>
+        <div class="response-buttons" id="responseButtons"></div>
+      </section>
+
+      <!-- 4. Finish -->
+      <section id="doneScreen" class="exp-screen form-card hidden">
+        <h1>Thank you! 🎉</h1>
+        <p id="doneText">Saving your responses…</p>
+        <div class="stats stats-small">
+          <div class="stat">
+            <span class="stat-label">Your avg reaction time</span>
+            <span class="stat-value" id="doneRT">—</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Trials completed</span>
+            <span class="stat-value" id="doneCount">0</span>
+          </div>
+        </div>
+        <div id="previewAnswers"></div>
+        <button class="btn-secondary hidden" id="retryBtn">Try saving again</button>
+      </section>
+    </main>
+
+    <script src="data.js"></script>
+    <script src="api.js"></script>
+    <script src="run.js"></script>
+  </body>
+</html>

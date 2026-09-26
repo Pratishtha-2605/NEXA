@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CognitiveLab — Results</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <a href="index.html" class="brand">
+        <span class="logo">CL</span>
+        <span class="brand-name">CognitiveLab</span>
+      </a>
+      <div class="user">
+        <span class="avatar">R</span>
+        <span class="user-email">researcher@iiits.in</span>
+      </div>
+    </header>
+
+    <main>
+      <section class="page-head">
+        <div>
+          <h1 id="resultsTitle">Experiment Results</h1>
+          <p id="resultsSub">All responses collected for this experiment.</p>
+        </div>
+        <div class="head-actions">
+          <a href="dashboard.html" class="btn-secondary btn-link">← Dashboard</a>
+          <button id="csvBtn">⬇ Download CSV</button>
+        </div>
+      </section>
+
+      <section class="stats stats-4">
+        <div class="stat">
+          <span class="stat-label">Participants</span>
+          <span class="stat-value" id="statParticipants">0</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Trials</span>
+          <span class="stat-value" id="statTrials">0</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Average Reaction Time</span>
+          <span class="stat-value" id="statRT">0 ms</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Accuracy</span>
+          <span class="stat-value" id="statAcc">0%</span>
+        </div>
+      </section>
+
+      <p class="empty hidden" id="emptyMsg">
+        No responses yet. Share the experiment link from the dashboard to start collecting data.
+      </p>
+
+      <div class="results-grid" id="resultsContent">
+        <section class="form-card">
+          <h2>Reaction Time Distribution</h2>
+          <div class="chart-box"><canvas id="rtChart"></canvas></div>
+        </section>
+
+        <section class="form-card">
+          <h2>Per-Trial Breakdown</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Trial</th><th>Word</th><th>Ink</th><th>Accuracy</th><th>Avg RT</th></tr>
+              </thead>
+              <tbody id="trialTable"></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+
+      <!-- Everyone who took this experiment -->
+      <section class="form-card section-gap" id="participantsCard">
+        <div class="section-head">
+          <h2>Participants</h2>
+          <span class="hint">Fastest first</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Rank</th><th>Participant</th><th>Avg RT</th><th>Accuracy</th><th>Submitted</th></tr>
+            </thead>
+            <tbody id="participantTable"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <script src="data.js"></script>
+    <script src="results.js"></script>
+  </body>
+</html>

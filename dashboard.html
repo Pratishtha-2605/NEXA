@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CognitiveLab — My Experiments</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <a href="index.html" class="brand">
+        <span class="logo">CL</span>
+        <span class="brand-name">CognitiveLab</span>
+      </a>
+      <div class="user">
+        <span class="avatar">R</span>
+        <span class="user-email">researcher-123</span>
+      </div>
+    </header>
+
+    <main>
+      <section class="page-head">
+        <div>
+          <h1>My Experiments</h1>
+          <p>Drafts can be edited and previewed. Published experiments get a share link.</p>
+        </div>
+        <a href="create.html" class="btn-link btn-big">+ Create Experiment</a>
+      </section>
+
+      <section class="stats stats-4">
+        <div class="stat">
+          <span class="stat-label">Experiments</span>
+          <span class="stat-value" id="statExperiments">0</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Published</span>
+          <span class="stat-value" id="statPublished">0</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Drafts</span>
+          <span class="stat-value" id="statDrafts">0</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Total Trials</span>
+          <span class="stat-value" id="statTrials">0</span>
+        </div>
+      </section>
+
+      <section class="card-grid" id="experimentList"></section>
+
+      <!-- Latest submissions (click a row to open its results) -->
+      <section class="form-card section-gap">
+        <div class="section-head">
+          <h2>Recent Activity</h2>
+          <a href="index.html#history" class="table-link">Full history →</a>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Participant</th><th>Experiment</th><th>Trials</th>
+                <th>Avg RT</th><th>Accuracy</th><th>Submitted</th>
+              </tr>
+            </thead>
+            <tbody id="activityTable"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script src="data.js"></script>
+    <script src="api.js"></script>
+    <script src="cards.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
